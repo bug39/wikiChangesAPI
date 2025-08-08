@@ -25,11 +25,12 @@ with EventSource(url) as stream:
                 
                 #start processing through
                 chunk.append(json.dumps(change, ensure_ascii=False))
-                
+
                 if len(chunk) >= CHUNK_ROWS:
                     curr_time = dt.datetime.now(dt.timezone.utc)
                     key = object_key(curr_time, chunk_id)
                     body = gzip.compress("\n".join(chunk).encode())
                     s3.put_object(Bucket = bucket, Key = key, Body = body)
+                    print(f"Uploaded {len(chunk)} events to {key}")
                     chunk = []
                     chunk_id += 1
