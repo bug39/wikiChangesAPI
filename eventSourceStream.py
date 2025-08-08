@@ -27,9 +27,9 @@ with EventSource(url) as stream:
                 chunk.append(json.dumps(change, ensure_ascii=False))
                 
                 if len(chunk) >= CHUNK_ROWS:
-                    curr_time = dt.datetime.now()
+                    curr_time = dt.datetime.now(dt.timezone.utc)
                     key = object_key(curr_time, chunk_id)
                     body = gzip.compress("\n".join(chunk).encode())
-                    s3.put_object(Bucket = bucket, Key = object_key, Body = body)
+                    s3.put_object(Bucket = bucket, Key = key, Body = body)
                     chunk = []
                     chunk_id += 1
