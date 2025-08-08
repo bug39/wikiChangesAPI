@@ -25,7 +25,7 @@ with EventSource(url) as stream:
                 
                 #start processing through
                 chunk.append(json.dumps(change, ensure_ascii=False))
-                if len(chunk) < CHUNK_ROWS:
+                if len(chunk) >= CHUNK_ROWS:
                     curr_time = dt.datetime.now
                     object_key = object_key(curr_time, chunk_id)
                     body = gzip.compress("\n".join(chunk).encode())
